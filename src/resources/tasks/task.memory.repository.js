@@ -6,14 +6,15 @@ const getAll = async () => {
 };
 
 const addTask = async (boardId, task) => {
-  const newTask = { ...task, boardId };
   const tasks = await getAll();
+  const newTask = { ...task, boardId };
   tasks.push(newTask);
+  return newTask;
 };
 
 const getTasksByBoardId = async id => {
   const tasks = await getAll();
-  const foundTasks = tasks.find(task => task.boardId === id);
+  const foundTasks = tasks.filter(task => task.boardId === id);
   return foundTasks ? foundTasks : { message: 'Tasks not found' };
 };
 
@@ -45,7 +46,6 @@ const updateTaskById = async (id, boardId, body) => {
 const deleteTaskById = async (id, boardId) => {
   const tasks = await getAll();
   const taskById = await getTaskByBoardAndTaskId(id, boardId);
-
   if (!taskById.message) {
     tasksData = tasks.filter(task => task.id !== id);
   } else {

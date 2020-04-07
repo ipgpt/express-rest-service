@@ -2,12 +2,17 @@ const router = require('express').Router();
 const Task = require('./task.model');
 const tasksService = require('./task.service');
 
+router.route('/tasks').get(async (req, res) => {
+  const tasks = await tasksService.getAll();
+  res.json(Task.toResponse(tasks));
+});
+
 router.route('/:boardId/tasks').get(async (req, res) => {
   const boardId = req.params.boardId;
 
   try {
     const tasks = await tasksService.getTasksByBoardId(boardId);
-    res.json(tasks.map(Task.toResponse));
+    res.status(200).json(tasks.map(Task.toResponse));
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -19,7 +24,7 @@ router.route('/:boardId/tasks/:id').get(async (req, res) => {
 
   try {
     const taskByIds = await tasksService.getTaskByBoardAndTaskId(id, boardId);
-    res.json(Task.toResponse(taskByIds));
+    res.status(200).json(Task.toResponse(taskByIds));
   } catch (error) {
     res.status(404).send(error.message);
   }
@@ -56,7 +61,7 @@ router.route('/:boardId/tasks/:id').delete(async (req, res) => {
 
   try {
     await tasksService.deleteTaskById(id, boardId);
-    res.status(200).json();
+    res.status(204).json();
   } catch (error) {
     res.status(404).send(error.message);
   }

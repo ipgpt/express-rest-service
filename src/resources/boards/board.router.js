@@ -48,7 +48,7 @@ router.route('/:id').delete(async (req, res) => {
   try {
     await tasksService.deleteTasksByBoardId(id);
     await boardsService.deleteBoardById(id);
-    res.status(200).json();
+    res.status(204).json();
   } catch (error) {
     res.status(404).send(error.message);
   }
